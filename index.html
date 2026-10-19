@@ -109,15 +109,26 @@ function show(id){
  if(id==='matches')renderLikes();
  if(id==='profile')loadProfile();
 }
-function renderPeople(){
- document.getElementById('people').innerHTML=
- '<div class="card"><h3>👋 Invite your friends</h3><p class="small">Real profiles will appear after a shared online database is connected.</p></div>';
+async function renderPeople() {
+  const peopleContainer = document.getElementById('people');
+  peopleContainer.innerHTML = 'Loading...';
+  try {
+    const querySnapshot = await getDocs(collection(db, 'users'));
+    peopleContainer.innerHTML = '';
+    querySnapshot.forEach((doc) => {
+      const user = doc.data();
+      peopleContainer.innerHTML += `
+        <div class="card">
+          <h3>${user.username}</h3>
+        </div>
+      `;
+    });
+  } catch (e) {
+    console.error("Error fetching users: ", e);
+    peopleContainer.innerHTML = 'Error loading users.';
+  }
 }
-function renderLikes(){
- document.getElementById('likes').textContent=
- likes.length?likes.join(', '):'No likes yet.';
-}
-function saveProfile(){
+ 
  const age=Number(document.getElementById('age').value);
  if(age<18||age>100){alert('This dating demo is for adults aged 18+');return}
  const p={name:document.getElementById('displayName').value,
