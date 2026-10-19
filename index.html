@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConnectMe</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#0d1020;color:white;
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:20px;background:#171b30;
+ text-align:center;font-size:25px;
+ color:#a78bfa;font-weight:bold;
+}
+.container{max-width:450px;margin:auto;padding:18px}
+.card{
+ background:#191e34;padding:18px;
+ border-radius:18px;margin-bottom:16px;
+}
+h2{margin-top:0}
+input,textarea{
+ width:100%;padding:13px;margin:8px 0;
+ border:1px solid #393f5c;border-radius:10px;
+ background:#101427;color:white;font-size:16px;
+}
+button{
+ padding:12px 16px;border:0;border-radius:10px;
+ background:#8b5cf6;color:white;font-size:15px;
+ cursor:pointer;margin:4px;
+}
+button.secondary{background:#303750}
+nav{display:flex;justify-content:space-around;
+ background:#171b30;padding:12px;position:sticky;top:0}
+nav button{flex:1}
+.person{
+ background:#252b46;padding:14px;border-radius:12px;
+ margin:10px 0;
+}
+.small{color:#b7bdd3;font-size:13px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<header>💜 ConnectMe</header>
+
+<nav>
+<button onclick="show('discover')">Discover</button>
+<button onclick="show('matches')">Matches</button>
+<button onclick="show('profile')">Profile</button>
+</nav>
+
+<div class="container">
+<section id="login" class="card">
+<h2>Welcome to ConnectMe 👋</h2>
+<p class="small">Connect with people and make new friends.</p>
+<input id="username" placeholder="Choose a username" maxlength="20">
+<button onclick="enterApp()">Continue</button>
+<p class="small">Demo version: account is stored only on this device.</p>
+</section>
+
+<section id="discover" class="hidden">
+<div class="card">
+<h2>🌍 Discover people</h2>
+<p>Meet new people and make friends.</p>
+<p class="small">This is a demo. Other real users are not connected yet.</p>
+</div>
+<div id="people"></div>
+</section>
+
+<section id="matches" class="hidden">
+<div class="card">
+<h2>❤️ Your likes</h2>
+<div id="likes">No likes yet.</div>
+</div>
+</section>
+
+<section id="profile" class="hidden">
+<div class="card">
+<h2>👤 My Profile</h2>
+<input id="displayName" placeholder="Display name">
+<input id="age" type="number" min="18" max="100" placeholder="Age (18+)">
+<textarea id="bio" placeholder="About me"></textarea>
+<button onclick="saveProfile()">Save profile</button>
+<p id="saved" class="small"></p>
+</div>
+</section>
+</div>
+
+<script>
+let user=localStorage.getItem('cm_user')||'';
+let likes=JSON.parse(localStorage.getItem('cm_likes')||'[]');
+
+function enterApp(){
+ const v=document.getElementById('username').value.trim();
+ if(!v){alert('Please choose a username');return}
+ user=v;
+ localStorage.setItem('cm_user',user);
+ document.getElementById('login').classList.add('hidden');
+ show('discover');
+}
+function show(id){
+ if(!user){document.getElementById('login').classList.remove('hidden');return}
+ ['discover','matches','profile'].forEach(x=>
+ document.getElementById(x).classList.toggle('hidden',x!==id));
+ if(id==='discover')renderPeople();
+ if(id==='matches')renderLikes();
+ if(id==='profile')loadProfile();
+}
+function renderPeople(){
+ document.getElementById('people').innerHTML=
+ '<div class="card"><h3>👋 Invite your friends</h3><p class="small">Real profiles will appear after a shared online database is connected.</p></div>';
+}
+function renderLikes(){
+ document.getElementById('likes').textContent=
+ likes.length?likes.join(', '):'No likes yet.';
+}
+function saveProfile(){
+ const age=Number(document.getElementById('age').value);
+ if(age<18||age>100){alert('This dating demo is for adults aged 18+');return}
+ const p={name:document.getElementById('displayName').value,
+ age:age,bio:document.getElementById('bio').value};
+ localStorage.setItem('cm_profile',JSON.stringify(p));
+ document.getElementById('saved').textContent='Profile saved on this device!';
+}
+function loadProfile(){
+ const p=JSON.parse(localStorage.getItem('cm_profile')||'{}');
+ document.getElementById('displayName').value=p.name||user;
+ document.getElementById('age').value=p.age||'';
+ document.getElementById('bio').value=p.bio||'';
+}
+if(user){
+ document.getElementById('username').value=user;
+ document.getElementById('login').classList.add('hidden');
+ show('discover');
+}
+</script>
+</body>
+</html>
