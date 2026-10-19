@@ -137,5 +137,27 @@ if(user){
  show('discover');
 }
 </script>
-</body>
+</body> <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAikoj4MBY9q094pMVAWagcvWO3uuO0A4Q",
+    authDomain: "connectme-f6095.firebaseapp.com",
+    projectId: "connectme-f6095",
+    storageBucket: "connectme-f6095.firebasestorage.app",
+    messagingSenderId: "1071463369113",
+    appId: "1:1071463369113:web:05f16680f67a6b799bab08",
+    measurementId: "G-9WJQ0W5Q0P"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 </html>
